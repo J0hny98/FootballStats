@@ -1,8 +1,8 @@
-require_relative './football_stats_crawler/crawler_class'
+require_relative './football_stats_crawler/crawler'
 
 puts 'Starting'
 
-crawler = Crawler.new
-crawler.test('My message')
+crawler = Crawler.new('7fc818b7d73e47d4babe4a58bb25ea81')
+crawler.put_teams_to_database
 
 puts 'Ending'
