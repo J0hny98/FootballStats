@@ -18,6 +18,8 @@ class Crawler
   end
 
   def put_competitions_to_database
+    puts 'Updating competitions'
+
     url = create_url('competitions')
     request = create_request(url)
     response = execute_request(url, request)
@@ -25,10 +27,11 @@ class Crawler
     available_commpetitions = JSON.parse(response.read_body, object_class: OpenStruct)
 
     @database_operations.insert_batch_competitions(available_commpetitions.competitions)
+    puts 'Competitions updated'
   end
 
   def put_teams_to_database
-    puts 'Getting all teams'
+    puts 'Updating teams'
     available_commpetitions = @database_operations.get_all_available_competitions
     available_commpetitions.each do |competition|
       url = create_url("competitions/#{competition.code}/teams")
@@ -38,6 +41,8 @@ class Crawler
       available_teams = JSON.parse(response.read_body, object_class: OpenStruct)
       @database_operations.insert_batch_teams(available_teams.teams)
     end
+
+    puts 'Teams Updated'
   end
 
   def get_teams_matches(team_id)
@@ -60,8 +65,14 @@ class Crawler
   end
 
   def execute_request(url, request)
-    Net::HTTP.start(url.hostname, url.port) { |http|
+    response = Net::HTTP.start(url.hostname, url.port) { |http|
       http.request(request)
     }
+
+    return response if response.is_a?(Net::HTTPSuccess)
+
+    puts('Waiting 60 seconds due to an API requests limitation')
+    sleep(60)
+    execute_request(url, request)
   end
 end
