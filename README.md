@@ -9,3 +9,8 @@
 ## Api key
 
 * 7fc818b7d73e47d4babe4a58bb25ea81
+
+## Build
+
+* gem build football_stats.gemspec
+* gem install football_stats-0.1.0.gem

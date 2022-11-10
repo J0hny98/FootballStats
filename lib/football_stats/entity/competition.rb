@@ -9,4 +9,9 @@ class Competition
     @type = type
     @number_of_available_seasons = number_of_available_seasons
   end
+
+  def pretty_print
+    puts "ID = #{@competition_id}, Name = #{@name}, Code = #{@code}, Type = #{@code}, " \
+         "Number of available seasons = #{@number_of_available_seasons}"
+  end
 end

@@ -1,0 +1,19 @@
+PATH
+  remote: .
+  specs:
+    football_stats (0.1.0)
+      thor (~> 1.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    thor (1.2.1)
+
+PLATFORMS
+  x86_64-linux
+
+DEPENDENCIES
+  football_stats!
+
+BUNDLED WITH
+   2.3.25
