@@ -29,9 +29,9 @@ class DatabaseOperationsDao
       VALUES
         (
           #{competition.id},
-          '#{competition.name}',
-          '#{competition.code}',
-          '#{competition.type}',
+          '#{excape_single_quotes(competition.name)}',
+          '#{excape_single_quotes(competition.code)}',
+          '#{excape_single_quotes(competition.type)}',
           #{competition.numberOfAvailableSeasons}
         )
       ON CONFLICT (competition_id) DO UPDATE SET
@@ -99,7 +99,7 @@ class DatabaseOperationsDao
   def select_competition_by_name(competition_name)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME} WHERE name = '#{competition_name}';")
+      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME} WHERE name = '#{excape_single_quotes(competition_name)}';")
     rescue PG::Error => e
       puts("An error occured when retrieving competition with name #{competition_name} from the database: #{e.message}")
     ensure
@@ -111,7 +111,7 @@ class DatabaseOperationsDao
   def select_competition_by_code(competition_code)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME} WHERE code = '#{competition_code}';")
+      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME} WHERE code = '#{excape_single_quotes(competition_code)}';")
     rescue PG::Error => e
       puts("An error occured when retrieving competition with code #{competition_code} from the database: #{e.message}")
     ensure
@@ -123,9 +123,34 @@ class DatabaseOperationsDao
   def select_team_by_name(team_name)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM #{TEAM_TABLE_NAME} WHERE name = '#{team_name}';")
+      result = connection.exec("SELECT * FROM #{TEAM_TABLE_NAME} WHERE name = '#{excape_single_quotes(team_name)}';")
     rescue PG::Error => e
       puts("An error occured when retrieving team with name #{team_name} from the database: #{e.message}")
+    ensure
+      connection&.close
+    end
+    result
+  end
+
+  def select_teams_in_competition_with_id(competition_id)
+    connection = PG.connect(dbname: @database_name, user: @user, password: @password)
+    begin
+      result = connection.exec("SELECT * FROM team t WHERE t.team_id in
+        (SELECT tc.team_id FROM team_competition tc WHERE tc.competition_id = #{competition_id});")
+    rescue PG::Error => e
+      puts("An error occured when retrieving teams from competition with id #{competition_id} from the database: #{e.message}")
+    ensure
+      connection&.close
+    end
+    result
+  end
+
+  def select_matches_for_team_with_id(team_id)
+    connection = PG.connect(dbname: @database_name, user: @user, password: @password)
+    begin
+      result = connection.exec("SELECT * FROM match m WHERE m.home_team_id = #{team_id} or m.away_team_id = #{team_id};")
+    rescue PG::Error => e
+      puts("An error occured when retrieving matches of team with id #{team_id} from the database: #{e.message}")
     ensure
       connection&.close
     end
@@ -143,7 +168,7 @@ class DatabaseOperationsDao
           VALUES
             (
               #{team.id},
-              '#{team.name}'
+              '#{excape_single_quotes(team.name)}'
             )
           ON CONFLICT (team_id) DO UPDATE SET
             name = EXCLUDED.name
@@ -192,6 +217,73 @@ class DatabaseOperationsDao
     nil
   end
 
+  def insert_team_match(match)
+    matchday = match.matchday.nil? ? 'null' : match.matchday
+    half_time_home = match.score.halfTime.home.nil? ? 'null' : match.score.halfTime.home
+    full_time_home = match.score.fullTime.home.nil? ? 'null' : match.score.fullTime.home
+    half_time_away = match.score.halfTime.away.nil? ? 'null' : match.score.halfTime.away
+    full_time_away = match.score.fullTime.away.nil? ? 'null' : match.score.fullTime.away
+    connection = PG.connect(dbname: @database_name, user: @user, password: @password)
+    begin
+      cmd = "INSERT INTO #{MATCH_TABLE_NAME}
+      (
+        match_id,
+        utc_date,
+        status,
+        matchday,
+        stage,
+        last_updated,
+        home_team_id,
+        away_team_id,
+        home_half_time,
+        home_full_time,
+        away_half_time,
+        away_full_time,
+        winner,
+        duration
+      )
+    VALUES
+      (
+        #{match.id},
+        '#{excape_single_quotes(match.utcDate)}',
+        '#{excape_single_quotes(match.status)}',
+        #{matchday},
+        '#{excape_single_quotes(match.stage)}',
+        '#{excape_single_quotes(match.lastUpdated)}',
+        #{match.homeTeam.id},
+        #{match.awayTeam.id},
+        #{half_time_home},
+        #{full_time_home},
+        #{half_time_away},
+        #{full_time_away},
+        '#{excape_single_quotes(match.score.winner)}',
+        '#{excape_single_quotes(match.score.duration)}'
+      )
+    ON CONFLICT (match_id) DO UPDATE SET
+      utc_date = EXCLUDED.utc_date,
+      status = EXCLUDED.status,
+      matchday = EXCLUDED.matchday,
+      stage = EXCLUDED.stage,
+      last_updated = EXCLUDED.last_updated,
+      home_team_id = EXCLUDED.home_team_id,
+      away_team_id = EXCLUDED.away_team_id,
+      home_half_time = EXCLUDED.home_half_time,
+      home_full_time = EXCLUDED.home_full_time,
+      away_half_time = EXCLUDED.away_half_time,
+      away_full_time = EXCLUDED.away_full_time,
+      winner = EXCLUDED.winner,
+      duration = EXCLUDED.duration
+    ;"
+      connection.exec(cmd)
+    rescue PG::Error => e
+      puts("An error occured when inserting team match with id #{match.id}
+            to the database and command #{cmd}: #{e.message}")
+    ensure
+      connection&.close
+    end
+    nil
+  end
+
   def remove_all_competitions
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
@@ -233,6 +325,16 @@ class DatabaseOperationsDao
       puts("An error occured when removing all the matches from the database: #{e.message}")
     ensure
       connection&.close
+    end
+  end
+
+  private
+
+  def excape_single_quotes(message)
+    if message.nil?
+      nil
+    else
+      message.gsub("'", "''")
     end
   end
 end

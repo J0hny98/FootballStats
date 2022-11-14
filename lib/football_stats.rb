@@ -10,7 +10,9 @@ class FootballStats < Thor
   PASSWORD = 'admin'.freeze
   API_KEY = '7fc818b7d73e47d4babe4a58bb25ea81'.freeze
 
-  MAIN_SERVICE = MainService.new(DATABASE_NAME, USER, PASSWORD, API_KEY)
+  CRAWLER_SERVICE = CrawlerService.new(API_KEY)
+  DATABASE_OPERATIONS_SERVICE = DatabaseOperationsService.new(DATABASE_NAME, USER, PASSWORD)
+  MAIN_SERVICE = MainService.new(CRAWLER_SERVICE, DATABASE_OPERATIONS_SERVICE)
 
   desc 'select_all_competitions', 'Returns all competitions from the database.'
   def select_all_competitions
@@ -54,11 +56,43 @@ class FootballStats < Thor
     found_team
   end
 
-  desc 'select_team_by_name ID', 'Returns team with id = ID from the database if exists.'
+  desc 'select_team_by_id ID', 'Returns team with id = ID from the database if exists.'
   def select_team_by_id(id)
     found_team = MAIN_SERVICE.select_team_by_id(id)
     found_team&.pretty_print
     found_team
+  end
+
+  desc 'select_teams_in_competition_with_id COMPETITION_ID',
+       'Returns all teams playing competition with id = COMPETITION_ID from the database.'
+  def select_teams_in_competition_with_id(competition_id)
+    found_teams = MAIN_SERVICE.select_teams_in_competition_with_id(competition_id)
+    found_teams.each(&:pretty_print)
+    found_teams
+  end
+
+  desc 'select_teams_in_competition_with_name COMPETITION_NAME',
+       'Returns all teams playing competition with name = COMPETITION_NAME from the database.'
+  def select_teams_in_competition_with_name(competition_name)
+    found_teams = MAIN_SERVICE.select_teams_in_competition_with_name(competition_name)
+    found_teams.each(&:pretty_print)
+    found_teams
+  end
+
+  desc 'select_matches_for_team_with_id TEAM_ID',
+       'Returns all matches for team with id = TEAM_ID from the database.'
+  def select_matches_for_team_with_id(team_id)
+    found_matches = MAIN_SERVICE.select_matches_for_team_with_id(team_id)
+    found_matches.each(&:pretty_print)
+    found_matches
+  end
+
+  desc 'select_matches_for_team_with_name TEAM_NAME',
+       'Returns all matches for team with name = TEAM_NAME from the database.'
+  def select_matches_for_team_with_name(team_name)
+    found_matches = MAIN_SERVICE.select_matches_for_team_with_name(team_name)
+    found_matches.each(&:pretty_print)
+    found_matches
   end
 
   desc 'insert_competitions', 'Inserts all competitions loaded from the API and then returns them.'
@@ -83,5 +117,31 @@ class FootballStats < Thor
   def clean_update
     MAIN_SERVICE.remove_all_data_from_database
     MAIN_SERVICE.put_all_data_to_database
+    MAIN_SERVICE.put_team_matches_from_api_to_database
+    nil
+  end
+
+  desc 'update_matches_for_team_with_id TEAM_ID', 'Updates matches for team with id TEAM_ID.'
+  def update_matches_for_team_with_id(team_id)
+    MAIN_SERVICE.put_team_matches_for_team_with_id_to_database(team_id)
+    nil
+  end
+
+  desc 'update_matches_for_team_with_name TEAM_NAME', 'Updates matches for team with name TEAM_NAME.'
+  def update_matches_for_team_with_name(team_name)
+    MAIN_SERVICE.put_team_matches_for_team_with_name_to_database(team_name)
+    nil
+  end
+
+  desc 'remove_all_teams', 'Removes all the teams data from the database.'
+  def remove_all_teams
+    MAIN_SERVICE.remove_all_teams_from_database
+    nil
+  end
+
+  desc 'remove_all_data', 'Removes all the data from the database.'
+  def remove_all_data
+    MAIN_SERVICE.remove_all_data_from_database
+    nil
   end
 end

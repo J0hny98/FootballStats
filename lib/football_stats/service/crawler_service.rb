@@ -17,8 +17,12 @@ class CrawlerService
     request = create_request(url)
     response = execute_request(url, request)
 
-    competitions = JSON.parse(response.read_body, object_class: OpenStruct)
-    competitions.competitions
+    if response.nil?
+      []
+    else
+      competitions = JSON.parse(response.read_body, object_class: OpenStruct)
+      competitions.competitions
+    end
   end
 
   def load_teams_from_api_for_competitions(competitions)
@@ -28,10 +32,25 @@ class CrawlerService
       request = create_request(url)
       response = execute_request(url, request)
 
-      available_teams_for_competition = JSON.parse(response.read_body, object_class: OpenStruct)
-      teams.concat(available_teams_for_competition.teams)
+      if !response.nil?
+        available_teams_for_competition = JSON.parse(response.read_body, object_class: OpenStruct)
+        teams.concat(available_teams_for_competition.teams)
+      end
     end
     teams
+  end
+
+  def load_matches_from_api_for_team_with_id(team_id)
+    url = create_url("teams/#{team_id}/matches")
+    request = create_request(url)
+    response = execute_request(url, request)
+
+    if response.nil?
+      []
+    else
+      matches = JSON.parse(response.read_body, object_class: OpenStruct)
+      matches.matches
+    end
   end
 
   private
@@ -54,8 +73,13 @@ class CrawlerService
 
     return response if response.is_a?(Net::HTTPSuccess)
 
-    puts('Waiting 60 seconds due to an API requests limitation')
-    sleep(60)
-    execute_request(url, request)
+    if response.is_a?(Net::HTTPTooManyRequests)
+      puts('Waiting 60 seconds due to an API requests limitation')
+      sleep(60)
+      execute_request(url, request)
+    else
+      puts("An error occurred when executing a request to the url #{url} - #{response.read_body}")
+      nil
+    end
   end
 end

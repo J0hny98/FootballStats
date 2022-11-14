@@ -35,7 +35,7 @@ CREATE TABLE match
 	match_id bigint NOT NULL,
 	utc_date varchar(50) NOT NULL,
 	status varchar(50) NOT NULL,
-	matchday integer NOT NULL,
+	matchday integer NULL,
 	stage varchar(50) NOT NULL,
 	last_updated varchar(50) NOT NULL,
 	home_team_id integer NOT NULL,
