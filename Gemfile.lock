@@ -7,13 +7,25 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
+    crack (0.4.5)
+      rexml
+    hashdiff (1.0.1)
+    public_suffix (5.0.0)
+    rexml (3.2.5)
     thor (1.2.1)
+    webmock (2.3.2)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
+      hashdiff
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
   football_stats!
+  webmock (~> 2.0)
 
 BUNDLED WITH
    2.3.25

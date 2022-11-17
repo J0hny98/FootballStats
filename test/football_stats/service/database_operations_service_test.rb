@@ -1,12 +1,11 @@
 require 'minitest/autorun'
-require 'pg'
 require_relative '../../../lib/football_stats/service/database_operations_service'
 require_relative '../../../lib/football_stats/entity/competition'
 require_relative '../../../lib/football_stats/entity/team'
 require_relative '../../../lib/football_stats/entity/match'
 require_relative './common_steps'
 
-# Main service tests class
+# Database operations service tests class
 class DatabaseOperationsServiceTest < Minitest::Test
   def test_insert_batch_competitions_when_competitions_are_nil
     # prepare

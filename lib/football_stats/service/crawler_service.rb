@@ -4,11 +4,10 @@ require 'json'
 
 # Crawler class is responsible for fetching the data
 class CrawlerService
-  API_BASE_URL = 'http://api.football-data.org/v4'.freeze
   AUTHORIZATION_HEADER = 'X-Auth-Token'.freeze
 
-  def initialize(api_key)
-    @api_base_url = API_BASE_URL
+  def initialize(api_base_url, api_key)
+    @api_base_url = api_base_url
     @api_key = api_key
   end
 
@@ -27,7 +26,7 @@ class CrawlerService
 
   def load_teams_from_api_for_competitions(competitions)
     teams = []
-    competitions.each do |competition|
+    competitions&.each do |competition|
       url = create_url("competitions/#{competition.code}/teams")
       request = create_request(url)
       response = execute_request(url, request)

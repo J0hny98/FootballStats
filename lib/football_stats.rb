@@ -3,16 +3,18 @@ require_relative './football_stats/dao/database_operations_dao'
 require_relative './football_stats/service/crawler_service'
 require_relative './football_stats/service/database_operations_service'
 require_relative './football_stats/service/main_service'
+require_relative './config'
 
 # Football stats class
 class FootballStats < Thor
-  DATABASE_NAME = 'football_stats'.freeze
-  USER = 'admin'.freeze
-  PASSWORD = 'admin'.freeze
-  API_KEY = '7fc818b7d73e47d4babe4a58bb25ea81'.freeze
+  DATABASE_NAME = Config.database_name
+  DATABASE_USER = Config.database_user
+  DATABASE_PASSWORD = Config.database_password
+  API_BASE_URL = Config.api_base_url
+  API_KEY = Config.api_key
 
-  CRAWLER_SERVICE = CrawlerService.new(API_KEY)
-  DATABASE_OPERATIONS_DAO = DatabaseOperationsDao.new(DATABASE_NAME, USER, PASSWORD)
+  CRAWLER_SERVICE = CrawlerService.new(API_BASE_URL, API_KEY)
+  DATABASE_OPERATIONS_DAO = DatabaseOperationsDao.new(DATABASE_NAME, DATABASE_USER, DATABASE_PASSWORD)
   DATABASE_OPERATIONS_SERVICE = DatabaseOperationsService.new(DATABASE_OPERATIONS_DAO)
   MAIN_SERVICE = MainService.new(CRAWLER_SERVICE, DATABASE_OPERATIONS_SERVICE)
 

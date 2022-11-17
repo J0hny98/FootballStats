@@ -1,0 +1,304 @@
+{
+    "filters": {
+        "competitions": "WC",
+        "permission": "TIER_THREE",
+        "limit": 100
+    },
+    "resultSet": {
+        "count": 3,
+        "competitions": "WC",
+        "first": "2022-11-23",
+        "last": "2022-12-01",
+        "played": 0,
+        "wins": 0,
+        "draws": 3,
+        "losses": 0
+    },
+    "matches": [
+        {
+            "area": {
+                "id": 2267,
+                "name": "World",
+                "code": "INT",
+                "flag": null
+            },
+            "competition": {
+                "id": 2000,
+                "name": "FIFA World Cup",
+                "code": "WC",
+                "type": "CUP",
+                "emblem": "https://crests.football-data.org/qatar.png"
+            },
+            "season": {
+                "id": 1382,
+                "startDate": "2022-11-21",
+                "endDate": "2022-12-18",
+                "currentMatchday": 1,
+                "winner": null,
+                "stages": [
+                    "GROUP_STAGE",
+                    "LAST_16",
+                    "QUARTER_FINALS",
+                    "SEMI_FINALS",
+                    "THIRD_PLACE",
+                    "FINAL"
+                ]
+            },
+            "id": 391905,
+            "utcDate": "2022-11-23T13:00:00Z",
+            "status": "TIMED",
+            "minute": null,
+            "injuryTime": null,
+            "attendance": null,
+            "venue": "Khalifa International Stadium",
+            "matchday": 1,
+            "stage": "GROUP_STAGE",
+            "group": "GROUP_E",
+            "lastUpdated": "2022-05-17T19:37:03Z",
+            "homeTeam": {
+                "id": 759,
+                "name": "Germany",
+                "shortName": "Germany",
+                "tla": "GER",
+                "crest": "https://crests.football-data.org/759.svg",
+                "coach": {
+                    "id": null,
+                    "name": null,
+                    "nationality": null
+                },
+                "leagueRank": null,
+                "formation": null,
+                "lineup": [],
+                "bench": []
+            },
+            "awayTeam": {
+                "id": 766,
+                "name": "Japan",
+                "shortName": "Japan",
+                "tla": "JPN",
+                "crest": "https://crests.football-data.org/766.svg",
+                "coach": {
+                    "id": null,
+                    "name": null,
+                    "nationality": null
+                },
+                "leagueRank": null,
+                "formation": null,
+                "lineup": [],
+                "bench": []
+            },
+            "score": {
+                "winner": null,
+                "duration": "REGULAR",
+                "fullTime": {
+                    "home": null,
+                    "away": null
+                },
+                "halfTime": {
+                    "home": null,
+                    "away": null
+                }
+            },
+            "goals": [],
+            "penalties": [],
+            "bookings": [],
+            "substitutions": [],
+            "odds": {
+                "homeWin": null,
+                "draw": null,
+                "awayWin": null
+            },
+            "referees": []
+        },
+        {
+            "area": {
+                "id": 2267,
+                "name": "World",
+                "code": "INT",
+                "flag": null
+            },
+            "competition": {
+                "id": 2000,
+                "name": "FIFA World Cup",
+                "code": "WC",
+                "type": "CUP",
+                "emblem": "https://crests.football-data.org/qatar.png"
+            },
+            "season": {
+                "id": 1382,
+                "startDate": "2022-11-21",
+                "endDate": "2022-12-18",
+                "currentMatchday": 1,
+                "winner": null,
+                "stages": [
+                    "GROUP_STAGE",
+                    "LAST_16",
+                    "QUARTER_FINALS",
+                    "SEMI_FINALS",
+                    "THIRD_PLACE",
+                    "FINAL"
+                ]
+            },
+            "id": 391908,
+            "utcDate": "2022-11-27T19:00:00Z",
+            "status": "TIMED",
+            "minute": null,
+            "injuryTime": null,
+            "attendance": null,
+            "venue": "Al Bayt Stadium",
+            "matchday": 2,
+            "stage": "GROUP_STAGE",
+            "group": "GROUP_E",
+            "lastUpdated": "2022-05-17T19:37:03Z",
+            "homeTeam": {
+                "id": 760,
+                "name": "Spain",
+                "shortName": "Spain",
+                "tla": "ESP",
+                "crest": "https://crests.football-data.org/760.svg",
+                "coach": {
+                    "id": null,
+                    "name": null,
+                    "nationality": null
+                },
+                "leagueRank": null,
+                "formation": null,
+                "lineup": [],
+                "bench": []
+            },
+            "awayTeam": {
+                "id": 759,
+                "name": "Germany",
+                "shortName": "Germany",
+                "tla": "GER",
+                "crest": "https://crests.football-data.org/759.svg",
+                "coach": {
+                    "id": null,
+                    "name": null,
+                    "nationality": null
+                },
+                "leagueRank": null,
+                "formation": null,
+                "lineup": [],
+                "bench": []
+            },
+            "score": {
+                "winner": null,
+                "duration": "REGULAR",
+                "fullTime": {
+                    "home": null,
+                    "away": null
+                },
+                "halfTime": {
+                    "home": null,
+                    "away": null
+                }
+            },
+            "goals": [],
+            "penalties": [],
+            "bookings": [],
+            "substitutions": [],
+            "odds": {
+                "homeWin": null,
+                "draw": null,
+                "awayWin": null
+            },
+            "referees": []
+        },
+        {
+            "area": {
+                "id": 2267,
+                "name": "World",
+                "code": "INT",
+                "flag": null
+            },
+            "competition": {
+                "id": 2000,
+                "name": "FIFA World Cup",
+                "code": "WC",
+                "type": "CUP",
+                "emblem": "https://crests.football-data.org/qatar.png"
+            },
+            "season": {
+                "id": 1382,
+                "startDate": "2022-11-21",
+                "endDate": "2022-12-18",
+                "currentMatchday": 1,
+                "winner": null,
+                "stages": [
+                    "GROUP_STAGE",
+                    "LAST_16",
+                    "QUARTER_FINALS",
+                    "SEMI_FINALS",
+                    "THIRD_PLACE",
+                    "FINAL"
+                ]
+            },
+            "id": 391910,
+            "utcDate": "2022-12-01T19:00:00Z",
+            "status": "TIMED",
+            "minute": null,
+            "injuryTime": null,
+            "attendance": null,
+            "venue": "Al Bayt Stadium",
+            "matchday": 3,
+            "stage": "GROUP_STAGE",
+            "group": "GROUP_E",
+            "lastUpdated": "2022-05-17T19:37:03Z",
+            "homeTeam": {
+                "id": null,
+                "name": null,
+                "shortName": null,
+                "tla": null,
+                "crest": null,
+                "coach": {
+                    "id": null,
+                    "name": null,
+                    "nationality": null
+                },
+                "leagueRank": null,
+                "formation": null,
+                "lineup": [],
+                "bench": []
+            },
+            "awayTeam": {
+                "id": 759,
+                "name": "Germany",
+                "shortName": "Germany",
+                "tla": "GER",
+                "crest": "https://crests.football-data.org/759.svg",
+                "coach": {
+                    "id": null,
+                    "name": null,
+                    "nationality": null
+                },
+                "leagueRank": null,
+                "formation": null,
+                "lineup": [],
+                "bench": []
+            },
+            "score": {
+                "winner": null,
+                "duration": "REGULAR",
+                "fullTime": {
+                    "home": null,
+                    "away": null
+                },
+                "halfTime": {
+                    "home": null,
+                    "away": null
+                }
+            },
+            "goals": [],
+            "penalties": [],
+            "bookings": [],
+            "substitutions": [],
+            "odds": {
+                "homeWin": null,
+                "draw": null,
+                "awayWin": null
+            },
+            "referees": []
+        }
+    ]
+}
