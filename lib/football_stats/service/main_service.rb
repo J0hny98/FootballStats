@@ -37,7 +37,8 @@ class MainService
 
   def put_team_matches_from_api_to_database
     teams = select_all_teams_from_database
-    puts "Inserting matches for #{teams.length} teams. It will take probably #{teams.length / 6.0} minutes due to an API limitations."
+    puts "Inserting matches for #{teams.length} teams. It will take probably #{teams.length / 6.0} " \
+         'minutes due to an API limitations.'
     counter = 0
     teams.each do |team|
       put_team_matches_for_team_with_id_to_database(team.team_id)
@@ -48,9 +49,7 @@ class MainService
 
   def put_team_matches_for_team_with_id_to_database(team_id)
     matches = @crawler_service.load_matches_from_api_for_team_with_id(team_id)
-    if !matches.nil? && !matches.empty?
-      @database_operations_service.insert_batch_matches(matches)
-    end
+    @database_operations_service.insert_batch_matches(matches) if !matches.nil? && !matches.empty?
     nil
   end
 

@@ -1,4 +1,5 @@
 require 'thor'
+require_relative './football_stats/dao/database_operations_dao'
 require_relative './football_stats/service/crawler_service'
 require_relative './football_stats/service/database_operations_service'
 require_relative './football_stats/service/main_service'
@@ -11,7 +12,8 @@ class FootballStats < Thor
   API_KEY = '7fc818b7d73e47d4babe4a58bb25ea81'.freeze
 
   CRAWLER_SERVICE = CrawlerService.new(API_KEY)
-  DATABASE_OPERATIONS_SERVICE = DatabaseOperationsService.new(DATABASE_NAME, USER, PASSWORD)
+  DATABASE_OPERATIONS_DAO = DatabaseOperationsDao.new(DATABASE_NAME, USER, PASSWORD)
+  DATABASE_OPERATIONS_SERVICE = DatabaseOperationsService.new(DATABASE_OPERATIONS_DAO)
   MAIN_SERVICE = MainService.new(CRAWLER_SERVICE, DATABASE_OPERATIONS_SERVICE)
 
   desc 'select_all_competitions', 'Returns all competitions from the database.'

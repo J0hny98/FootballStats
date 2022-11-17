@@ -6,6 +6,8 @@ Style/FrozenStringLiteralComment:
 
 Metrics/MethodLength:
   Max: 50
+  Exclude: 
+    - "./lib/football_stats/dao/*.rb"
 
 Metrics/BlockLength:
   Max: 50
@@ -14,4 +16,10 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/AbcSize:
+  Enabled: false
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
   Enabled: false

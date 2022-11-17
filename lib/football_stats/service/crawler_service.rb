@@ -32,7 +32,7 @@ class CrawlerService
       request = create_request(url)
       response = execute_request(url, request)
 
-      if !response.nil?
+      unless response.nil?
         available_teams_for_competition = JSON.parse(response.read_body, object_class: OpenStruct)
         teams.concat(available_teams_for_competition.teams)
       end

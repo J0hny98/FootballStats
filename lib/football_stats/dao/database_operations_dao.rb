@@ -1,5 +1,6 @@
 require 'pg'
 require_relative '../entity/competition'
+require_relative '../entity/match'
 require_relative '../entity/team'
 
 # DatabaseOperationsDao Class
@@ -29,9 +30,9 @@ class DatabaseOperationsDao
       VALUES
         (
           #{competition.id},
-          '#{excape_single_quotes(competition.name)}',
-          '#{excape_single_quotes(competition.code)}',
-          '#{excape_single_quotes(competition.type)}',
+          '#{escape_single_quotes(competition.name)}',
+          '#{escape_single_quotes(competition.code)}',
+          '#{escape_single_quotes(competition.type)}',
           #{competition.numberOfAvailableSeasons}
         )
       ON CONFLICT (competition_id) DO UPDATE SET
@@ -57,7 +58,7 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
-    result
+    create_competitions_from_result(result)
   end
 
   def select_competition_by_id(competition_id)
@@ -69,7 +70,12 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
-    result
+
+    if result.ntuples.zero?
+      nil
+    else
+      create_competition_object_from_row(result[0])
+    end
   end
 
   def select_all_teams
@@ -81,7 +87,7 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
-    result
+    create_teams_from_result(result)
   end
 
   def select_team_by_id(team_id)
@@ -93,43 +99,65 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
-    result
+
+    if result.ntuples.zero?
+      nil
+    else
+      create_team_object_from_row(result[0])
+    end
   end
 
   def select_competition_by_name(competition_name)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME} WHERE name = '#{excape_single_quotes(competition_name)}';")
+      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME}
+                                WHERE name = '#{escape_single_quotes(competition_name)}';")
     rescue PG::Error => e
       puts("An error occured when retrieving competition with name #{competition_name} from the database: #{e.message}")
     ensure
       connection&.close
     end
-    result
+
+    if result.ntuples.zero?
+      nil
+    else
+      create_competition_object_from_row(result[0])
+    end
   end
 
   def select_competition_by_code(competition_code)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME} WHERE code = '#{excape_single_quotes(competition_code)}';")
+      result = connection.exec("SELECT * FROM #{COMPETITION_TABLE_NAME}
+                                WHERE code = '#{escape_single_quotes(competition_code)}';")
     rescue PG::Error => e
       puts("An error occured when retrieving competition with code #{competition_code} from the database: #{e.message}")
     ensure
       connection&.close
     end
-    result
+
+    if result.ntuples.zero?
+      nil
+    else
+      create_competition_object_from_row(result[0])
+    end
   end
 
   def select_team_by_name(team_name)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM #{TEAM_TABLE_NAME} WHERE name = '#{excape_single_quotes(team_name)}';")
+      result = connection.exec("SELECT * FROM #{TEAM_TABLE_NAME} WHERE name = '#{escape_single_quotes(team_name)}';")
     rescue PG::Error => e
       puts("An error occured when retrieving team with name #{team_name} from the database: #{e.message}")
     ensure
       connection&.close
     end
-    result
+
+    if result.ntuples.zero?
+      nil
+    else
+      create_team_object_from_row(result[0])
+    end
   end
 
   def select_teams_in_competition_with_id(competition_id)
@@ -138,23 +166,25 @@ class DatabaseOperationsDao
       result = connection.exec("SELECT * FROM team t WHERE t.team_id in
         (SELECT tc.team_id FROM team_competition tc WHERE tc.competition_id = #{competition_id});")
     rescue PG::Error => e
-      puts("An error occured when retrieving teams from competition with id #{competition_id} from the database: #{e.message}")
+      puts("An error occured when retrieving teams from competition with id #{competition_id}
+            from the database: #{e.message}")
     ensure
       connection&.close
     end
-    result
+    create_teams_from_result(result)
   end
 
   def select_matches_for_team_with_id(team_id)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
-      result = connection.exec("SELECT * FROM match m WHERE m.home_team_id = #{team_id} or m.away_team_id = #{team_id};")
+      result = connection.exec("SELECT * FROM match m
+                                WHERE m.home_team_id = #{team_id} or m.away_team_id = #{team_id};")
     rescue PG::Error => e
       puts("An error occured when retrieving matches of team with id #{team_id} from the database: #{e.message}")
     ensure
       connection&.close
     end
-    result
+    create_matches_from_result(result)
   end
 
   def insert_team(team)
@@ -168,7 +198,7 @@ class DatabaseOperationsDao
           VALUES
             (
               #{team.id},
-              '#{excape_single_quotes(team.name)}'
+              '#{escape_single_quotes(team.name)}'
             )
           ON CONFLICT (team_id) DO UPDATE SET
             name = EXCLUDED.name
@@ -181,7 +211,7 @@ class DatabaseOperationsDao
     nil
   end
 
-  def remove_team_competition_for_team_with_id(team_id)
+  def remove_team_competitions_for_team_with_id(team_id)
     connection = PG.connect(dbname: @database_name, user: @user, password: @password)
     begin
       connection.exec("DELETE FROM #{TEAM_COMPETITION_TABLE_NAME} WHERE team_id = #{team_id};")
@@ -245,19 +275,19 @@ class DatabaseOperationsDao
     VALUES
       (
         #{match.id},
-        '#{excape_single_quotes(match.utcDate)}',
-        '#{excape_single_quotes(match.status)}',
+        '#{escape_single_quotes(match.utcDate)}',
+        '#{escape_single_quotes(match.status)}',
         #{matchday},
-        '#{excape_single_quotes(match.stage)}',
-        '#{excape_single_quotes(match.lastUpdated)}',
+        '#{escape_single_quotes(match.stage)}',
+        '#{escape_single_quotes(match.lastUpdated)}',
         #{match.homeTeam.id},
         #{match.awayTeam.id},
         #{half_time_home},
         #{full_time_home},
         #{half_time_away},
         #{full_time_away},
-        '#{excape_single_quotes(match.score.winner)}',
-        '#{excape_single_quotes(match.score.duration)}'
+        '#{escape_single_quotes(match.score.winner)}',
+        '#{escape_single_quotes(match.score.duration)}'
       )
     ON CONFLICT (match_id) DO UPDATE SET
       utc_date = EXCLUDED.utc_date,
@@ -330,7 +360,46 @@ class DatabaseOperationsDao
 
   private
 
-  def excape_single_quotes(message)
+  def create_teams_from_result(result)
+    teams = []
+    result.each do |row|
+      teams.append(create_team_object_from_row(row))
+    end
+    teams
+  end
+
+  def create_team_object_from_row(row)
+    Team.new(row['team_id'], row['name'])
+  end
+
+  def create_competitions_from_result(result)
+    competitions = []
+    result.each do |row|
+      competitions.append(create_competition_object_from_row(row))
+    end
+    competitions
+  end
+
+  def create_competition_object_from_row(row)
+    Competition.new(row['competition_id'], row['name'], row['code'], row['type'], row['number_of_available_seasons'])
+  end
+
+  def create_matches_from_result(result)
+    matches = []
+    result.each do |row|
+      matches.append(create_match_object_from_row(row))
+    end
+    matches
+  end
+
+  def create_match_object_from_row(_row)
+    Match.new(match['match_id'], match['utc_date'], match['status'], match['matchday'],
+              match['stage'], match['last_updated'], home_team.team_id, home_team.name,
+              away_team.team_id, away_team.name, match['home_half_time'], match['away_half_time'],
+              match['home_full_time'], match['away_full_time'], match['winner'], match['duration'])
+  end
+
+  def escape_single_quotes(message)
     if message.nil?
       nil
     else
