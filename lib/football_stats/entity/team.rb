@@ -10,4 +10,14 @@ class Team
   def pretty_print
     puts "ID = #{@team_id}, Name = #{@name}"
   end
+
+  def ==(other)
+    other.class == self.class && other.state == state
+  end
+
+  protected
+
+  def state
+    [@team_id, @name]
+  end
 end

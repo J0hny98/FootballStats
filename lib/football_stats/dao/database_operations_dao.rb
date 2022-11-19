@@ -17,34 +17,36 @@ class DatabaseOperationsDao
   end
 
   def insert_competition(competition)
-    connection = PG.connect(dbname: @database_name, user: @user, password: @password)
-    begin
-      connection.exec("INSERT INTO #{COMPETITION_TABLE_NAME}
-        (
-          competition_id,
-          name,
-          code,
-          type,
-          number_of_available_seasons
-        )
-      VALUES
-        (
-          #{competition.id},
-          '#{escape_single_quotes(competition.name)}',
-          '#{escape_single_quotes(competition.code)}',
-          '#{escape_single_quotes(competition.type)}',
-          #{competition.numberOfAvailableSeasons}
-        )
-      ON CONFLICT (competition_id) DO UPDATE SET
-        name = EXCLUDED.name,
-        code = EXCLUDED.code,
-        type = EXCLUDED.type,
-        number_of_available_seasons = EXCLUDED.number_of_available_seasons
-      ;")
-    rescue PG::Error => e
-      puts("An error occured when inserting competition #{competition.name} to the database: #{e.message}")
-    ensure
-      connection&.close
+    unless competition.nil?
+      connection = PG.connect(dbname: @database_name, user: @user, password: @password)
+      begin
+        connection.exec("INSERT INTO #{COMPETITION_TABLE_NAME}
+          (
+            competition_id,
+            name,
+            code,
+            type,
+            number_of_available_seasons
+          )
+        VALUES
+          (
+            #{competition.id},
+            '#{escape_single_quotes(competition.name)}',
+            '#{escape_single_quotes(competition.code)}',
+            '#{escape_single_quotes(competition.type)}',
+            #{competition.numberOfAvailableSeasons}
+          )
+        ON CONFLICT (competition_id) DO UPDATE SET
+          name = EXCLUDED.name,
+          code = EXCLUDED.code,
+          type = EXCLUDED.type,
+          number_of_available_seasons = EXCLUDED.number_of_available_seasons
+        ;")
+      rescue PG::Error => e
+        puts("An error occured when inserting competition #{competition.name} to the database: #{e.message}")
+      ensure
+        connection&.close
+      end
     end
     nil
   end
@@ -188,25 +190,27 @@ class DatabaseOperationsDao
   end
 
   def insert_team(team)
-    connection = PG.connect(dbname: @database_name, user: @user, password: @password)
-    begin
-      connection.exec("INSERT INTO #{TEAM_TABLE_NAME}
-            (
-              team_id,
-              name
-            )
-          VALUES
-            (
-              #{team.id},
-              '#{escape_single_quotes(team.name)}'
-            )
-          ON CONFLICT (team_id) DO UPDATE SET
-            name = EXCLUDED.name
-          ;")
-    rescue PG::Error => e
-      puts("An error occured when inserting team #{team.name} to the database: #{e.message}")
-    ensure
-      connection&.close
+    unless team.nil?
+      connection = PG.connect(dbname: @database_name, user: @user, password: @password)
+      begin
+        connection.exec("INSERT INTO #{TEAM_TABLE_NAME}
+              (
+                team_id,
+                name
+              )
+            VALUES
+              (
+                #{team.id},
+                '#{escape_single_quotes(team.name)}'
+              )
+            ON CONFLICT (team_id) DO UPDATE SET
+              name = EXCLUDED.name
+            ;")
+      rescue PG::Error => e
+        puts("An error occured when inserting team #{team.name} to the database: #{e.message}")
+      ensure
+        connection&.close
+      end
     end
     nil
   end
@@ -323,6 +327,7 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
+    nil
   end
 
   def remove_all_teams
@@ -334,6 +339,7 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
+    nil
   end
 
   def remove_all_teams_competitions
@@ -345,6 +351,7 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
+    nil
   end
 
   def remove_all_matches
@@ -356,6 +363,7 @@ class DatabaseOperationsDao
     ensure
       connection&.close
     end
+    nil
   end
 
   private
@@ -396,9 +404,9 @@ class DatabaseOperationsDao
 
   def create_match_object_from_row(row, home_team, away_team)
     Match.new(row['match_id'], row['utc_date'], row['status'], row['matchday'],
-      row['stage'], row['last_updated'], row['home_team_id'], home_team&.name,
-      row['away_team_id'], away_team&.name, row['home_half_time'], row['away_half_time'],
-      row['home_full_time'], row['away_full_time'], row['winner'], row['duration'])
+              row['stage'], row['last_updated'], row['home_team_id'], home_team&.name,
+              row['away_team_id'], away_team&.name, row['home_half_time'], row['away_half_time'],
+              row['home_full_time'], row['away_full_time'], row['winner'], row['duration'])
   end
 
   def escape_single_quotes(message)

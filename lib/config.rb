@@ -1,3 +1,4 @@
+# Config class
 class Config
   DATABASE_NAME = 'football_stats'.freeze
   DATABASE_USER = 'admin'.freeze
@@ -9,7 +10,7 @@ class Config
     def api_base_url
       API_BASE_URL
     end
-    
+
     def api_key
       API_KEY
     end

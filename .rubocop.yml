@@ -8,6 +8,7 @@ Metrics/MethodLength:
   Max: 50
   Exclude: 
     - "./lib/football_stats/dao/*.rb"
+    - "./test/football_stats/dao/database_operations_dao_test.rb"
 
 Metrics/BlockLength:
   Max: 50

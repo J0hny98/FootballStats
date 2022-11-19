@@ -32,4 +32,16 @@ class Match
     puts "\t\tHalf time = #{@home_half_time} : #{@away_half_time}"
     puts "\t\tFull time = #{@home_full_time} : #{@away_full_time}"
   end
+
+  def ==(other)
+    other.class == self.class && other.state == state
+  end
+
+  protected
+
+  def state
+    [@match_id, @utc_date, @status, @matchday, @stage, @last_updated, @home_team_id, @home_team_name,
+     @away_team_id, @away_team_name, @home_half_time, @away_half_time, @home_full_time, @away_full_time,
+     @winner, @duration]
+  end
 end

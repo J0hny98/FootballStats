@@ -101,14 +101,14 @@ class CrawlerServiceTest < Minitest::Test
     # prepare
     team_id = 1
     crawler_service = CrawlerService.new(API_BASE_URL, API_KEY)
-    
+
     api_response = File.read('./test/resources/stubs/response/matches.json')
     stub_request(:get, "#{API_BASE_URL}/teams/#{team_id}/matches/")
       .with(headers: { AUTHORIZATION_HEADER => API_KEY })
       .to_return(body: api_response)
 
     expected_return = JSON.parse(api_response, object_class: OpenStruct).matches
-    
+
     # action
     result = crawler_service.load_matches_from_api_for_team_with_id(team_id)
 
