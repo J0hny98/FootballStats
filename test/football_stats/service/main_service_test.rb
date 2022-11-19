@@ -614,7 +614,7 @@ class MainServiceTest < Minitest::Test
     crawler_service_mock.verify
     database_operations_service_mock.verify
 
-    assert_nil(result)
+    assert_equal([], result)
   end
 
   def test_select_teams_in_competition_with_name_with_found_competition

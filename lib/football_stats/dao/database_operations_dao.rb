@@ -387,16 +387,18 @@ class DatabaseOperationsDao
   def create_matches_from_result(result)
     matches = []
     result.each do |row|
-      matches.append(create_match_object_from_row(row))
+      home_team = select_team_by_id(row['home_team_id'])
+      away_team = select_team_by_id(row['away_team_id'])
+      matches.append(create_match_object_from_row(row, home_team, away_team))
     end
     matches
   end
 
-  def create_match_object_from_row(_row)
-    Match.new(match['match_id'], match['utc_date'], match['status'], match['matchday'],
-              match['stage'], match['last_updated'], home_team.team_id, home_team.name,
-              away_team.team_id, away_team.name, match['home_half_time'], match['away_half_time'],
-              match['home_full_time'], match['away_full_time'], match['winner'], match['duration'])
+  def create_match_object_from_row(row, home_team, away_team)
+    Match.new(row['match_id'], row['utc_date'], row['status'], row['matchday'],
+      row['stage'], row['last_updated'], row['home_team_id'], home_team&.name,
+      row['away_team_id'], away_team&.name, row['home_half_time'], row['away_half_time'],
+      row['home_full_time'], row['away_full_time'], row['winner'], row['duration'])
   end
 
   def escape_single_quotes(message)

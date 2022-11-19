@@ -97,7 +97,7 @@ class MainService
   def select_teams_in_competition_with_name(competition_name)
     found_competition = select_competition_by_name(competition_name)
     if found_competition.nil?
-      nil
+      []
     else
       @database_operations_service.select_teams_in_competition_with_id(found_competition.competition_id)
     end
