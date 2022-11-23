@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.1'
 
+  s.add_runtime_dependency 'pg', '~> 1.4'
   s.add_runtime_dependency 'thor', '~> 1.2'
   s.add_development_dependency 'webmock', '~> 2.0'
 end
