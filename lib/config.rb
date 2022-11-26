@@ -4,7 +4,7 @@ class Config
   DATABASE_USER = 'admin'.freeze
   DATABASE_PASSWORD = 'admin'.freeze
   API_BASE_URL = 'http://api.football-data.org/v4'.freeze
-  API_KEY = '7fc818b7d73e47d4babe4a58bb25ea81'.freeze
+  API_KEY = 'api-key'.freeze
 
   class << self
     def api_base_url
