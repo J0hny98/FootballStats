@@ -4,7 +4,7 @@
 
 ### PostgreSQL
 
-Before you run the application you need to have running PostgreSQL databse on port `5432` with the correct database schema. [Create script](./resources/Database.sql) for this schema is in the resources folder as `Database.sql`. You just need to create the database and then execute this script.
+Before you run the application you need to have running PostgreSQL databse on port `5432` with the correct database schema. [Create script](./resources/Database.sql) for this schema is in the resources folder as `Database.sql`. You just need to create the database and then execute this script. You can take a look on a [database schema](./resources/Database.pdf) which is also in the resources foled as `Database.pdf`.
 
 Also you have to provide correct credentials for the created database. These credentials need to be inserted into the [config file](./lib/config.rb) which is in the lib folder as `config.rb`. Right now there are dummy values.
 
