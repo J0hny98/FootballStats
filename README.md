@@ -29,6 +29,10 @@ After this you should be able to run the application using the file in the bin f
 
 Other way to use the application is to use it directly in your ruby script using the `require football_stats` in the beginning of your script.
 
+## Tests
+
+To run the tests execute this command `rake test`.
+
 ## Example of running the application
 
 You can run the application by executing this file [football_stats](./bin/football_stats) in the bin folder like this `./football_stats <COMMAND> <ARGUMENTS>`.
