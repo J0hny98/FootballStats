@@ -154,7 +154,6 @@ class FootballStats < Thor
 
   # Method inserts all the teams and their matches for the existing competitions, then returns and prints the teams.
   #
-  c
   # @return Array of loaded [Team] objects.
   desc 'insert_teams [CLEAN_INSERT]', 'Inserts all the teams and their matches for the existing competitions,
         then returns and prints the teams.
